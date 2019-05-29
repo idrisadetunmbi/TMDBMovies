@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="315dp"
+    android:layout_height="350dp"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="4dp"
     app:contentPadding="8dp">
@@ -21,20 +21,37 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
             tools:src="@color/design_default_color_primary" />
+
+        <TextView
+            android:id="@+id/textview_movie_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/textview_movie_overview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageview_movie_poster"
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/textview_movie_overview"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:textColor="@android:color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageview_movie_poster"
+            app:layout_constraintTop_toBottomOf="@id/textview_movie_title"
             tools:text="Some long overview" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
