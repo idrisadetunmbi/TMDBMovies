@@ -28,6 +28,16 @@ class WebServiceGenerator(context: Context) {
         }
         .addInterceptor(HttpLoggingInterceptor()
             .apply { level = HttpLoggingInterceptor.Level.BODY })
+        .authenticator { route, response ->
+            val request = response.request()
+            val sessionId = context.getString(R.string.session_id)
+            if (request.url().queryParameter("session_id") == sessionId) return@authenticator null
+            val newUrl = request.url()
+                .newBuilder()
+                .addQueryParameter("session_id", sessionId)
+                .build()
+            return@authenticator request.newBuilder().url(newUrl).build()
+        }
         .build()
 
     val retrofit: Retrofit = Retrofit.Builder()

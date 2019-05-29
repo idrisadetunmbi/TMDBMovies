@@ -2,23 +2,39 @@ package idris.adetunmbi.features.moviedetail
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.BASE_IMAGE_URL
+import idris.adetunmbi.domain.api.Resource
 import idris.adetunmbi.domain.extenstions.plusAssign
+import idris.adetunmbi.features.moviedetail.MovieDetailViewModel.ViewCommands.ShowNotification
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieDetailFragment : Fragment() {
-
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val viewModel: MovieDetailViewModel by viewModel()
+
+    private var movieId: Int = 0
+
+    private val snackBar: Snackbar? by lazy {
+        this.view?.let {
+            Snackbar.make(it, "", Snackbar.LENGTH_SHORT)
+        }
+    }
+
+    private lateinit var progressBar: ProgressBar
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,17 +42,56 @@ class MovieDetailFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie, container, false)
 
-        subscribeData()
+        progressBar = view.findViewById(R.id.pb_loading)
 
-        val movieId = arguments?.getInt(ARG_MOVIE_ID)
-        movieId?.let { viewModel.init(it) }
+        subscribeData()
+        subscribeCommands()
+
+        movieId = arguments?.getInt(ARG_MOVIE_ID) ?: 0
+        viewModel.init(movieId)
 
         return view
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_movie_detail, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_favorite -> {
+            viewModel.handleFavoriteButtonClick(movieId)
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
+    }
+
     private fun subscribeData() {
         compositeDisposable += viewModel.dataSubject.subscribe {
-            mapMovieToView(it)
+            when (it) {
+                is Resource.Success -> {
+                    progressBar.visibility = View.GONE
+                    it.data?.let { movie -> mapMovieToView(movie) }
+                }
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Error -> {
+                    progressBar.visibility = View.GONE
+                    snackBar?.setText(it.message.toString())?.show()
+                }
+            }
+        }
+    }
+
+    private fun subscribeCommands() {
+        compositeDisposable += viewModel.commandSubject.subscribe {
+            when (it) {
+                is ShowNotification -> {
+                    progressBar.visibility = View.GONE
+                    snackBar?.setText(it.message)?.show()
+                }
+            }
         }
     }
 

@@ -1,11 +1,11 @@
 package idris.adetunmbi.domain.api
 
+import idris.adetunmbi.features.moviedetail.FavoriteMovieRequestBody
 import idris.adetunmbi.features.moviedetail.MovieResponse
 import idris.adetunmbi.features.moviesdiscovery.MoviesListResponse
+import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface Api {
@@ -17,4 +17,7 @@ interface Api {
 
     @GET("movie/{movieId}")
     fun getMovie(@Path("movieId") movieId: Int): Single<MovieResponse>
+
+    @POST("account/{}/favorite")
+    fun favoriteMovie(@Body body: FavoriteMovieRequestBody): Completable
 }
