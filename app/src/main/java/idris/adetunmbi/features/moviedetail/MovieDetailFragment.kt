@@ -3,12 +3,14 @@ package idris.adetunmbi.features.moviedetail
 
 import android.os.Bundle
 import android.view.*
+import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.BASE_IMAGE_URL
+import idris.adetunmbi.domain.api.Resource
 import idris.adetunmbi.domain.extenstions.plusAssign
 import idris.adetunmbi.features.moviedetail.MovieDetailViewModel.ViewCommands.ShowNotification
 import io.reactivex.disposables.CompositeDisposable
@@ -27,6 +29,8 @@ class MovieDetailFragment : Fragment() {
         }
     }
 
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -37,6 +41,8 @@ class MovieDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movie, container, false)
+
+        progressBar = view.findViewById(R.id.pb_loading)
 
         subscribeData()
         subscribeCommands()
@@ -62,7 +68,19 @@ class MovieDetailFragment : Fragment() {
 
     private fun subscribeData() {
         compositeDisposable += viewModel.dataSubject.subscribe {
-            mapMovieToView(it)
+            when (it) {
+                is Resource.Success -> {
+                    progressBar.visibility = View.GONE
+                    it.data?.let { movie -> mapMovieToView(movie) }
+                }
+                is Resource.Loading -> {
+                    progressBar.visibility = View.VISIBLE
+                }
+                is Resource.Error -> {
+                    progressBar.visibility = View.GONE
+                    snackBar?.setText(it.message.toString())?.show()
+                }
+            }
         }
     }
 
@@ -70,6 +88,7 @@ class MovieDetailFragment : Fragment() {
         compositeDisposable += viewModel.commandSubject.subscribe {
             when (it) {
                 is ShowNotification -> {
+                    progressBar.visibility = View.GONE
                     snackBar?.setText(it.message)?.show()
                 }
             }
