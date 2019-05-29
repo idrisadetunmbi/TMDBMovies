@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.api.Resource
+import idris.adetunmbi.domain.extenstions.plusAssign
+import idris.adetunmbi.features.moviesdiscovery.MoviesDiscoveryViewModel.ViewCommands.ClearData
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MoviesDiscoveryFragment : Fragment() {
-
     private val viewModel: MoviesDiscoveryViewModel by viewModel()
+    private val compositeDisposable = CompositeDisposable()
 
     private val moviesListAdapter: MoviesListAdapter by lazy {
         MoviesListAdapter(
@@ -29,10 +31,6 @@ class MoviesDiscoveryFragment : Fragment() {
         }
     }
 
-    private val compositeDisposable = CompositeDisposable()
-    private var fetchTriggered: Boolean = false
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +38,18 @@ class MoviesDiscoveryFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_movies_discovery, container, false)
         initializeRvListContainer(view)
         subscribeData()
+        subscribeCommands()
         return view
+    }
+
+    fun handleSearchSubmit(text: String?) {
+        if (text == null || text.isBlank()) return
+        moviesListAdapter.clearData()
+        viewModel.handleSearchSubmit(text)
+    }
+
+    fun handleSearchChange(newText: String) {
+        viewModel.handleSearchChange(newText)
     }
 
     private fun initializeRvListContainer(view: View?) {
@@ -50,10 +59,8 @@ class MoviesDiscoveryFragment : Fragment() {
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (!canScrollVertically(1) && !fetchTriggered) {
-                        fetchTriggered = true
-                        viewModel.loadNextPage()
-                    }
+                    val hasReachedListEnd = !canScrollVertically(1)
+                    if (hasReachedListEnd) viewModel.loadNextPage()
                 }
             })
         }
@@ -67,17 +74,28 @@ class MoviesDiscoveryFragment : Fragment() {
                         // TODO: handle loading state
                     }
                     is Resource.Success -> {
-                        fetchTriggered = false
                         resource.data?.let {
                             moviesListAdapter.updateData(it)
                         }
                     }
                     is Resource.Error -> {
-                        fetchTriggered = false
                         snackBar?.setText("An error occurred")?.show()
                     }
                 }
             }
         )
+    }
+
+    private fun subscribeCommands() {
+        compositeDisposable += viewModel.commandSubject.subscribe {
+            when (it) {
+                is ClearData -> moviesListAdapter.clearData()
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 }

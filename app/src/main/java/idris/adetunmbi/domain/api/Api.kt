@@ -9,4 +9,7 @@ import retrofit2.http.Query
 interface Api {
     @GET("discover/movie")
     fun getMovies(@Query("page") page: Int = 1): Single<MoviesListResponse>
+
+    @GET("search/movie")
+    fun searchMovies(@Query("query") query: String, @Query("page") page: Int = 1): Single<MoviesListResponse>
 }
