@@ -26,7 +26,7 @@ class MoviesDiscoveryFragment : Fragment() {
             mutableListOf()
         ) { movieId ->
             findNavController()
-                .navigate(R.id.action_moviesDiscoveryFragment_to_movieFragment, MovieDetailFragment.args(movieId))
+                .navigate(R.id.action_global_movieFragment, MovieDetailFragment.args(movieId))
         }
     }
     private val snackBar: Snackbar? by lazy {
@@ -44,7 +44,7 @@ class MoviesDiscoveryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_movies_discovery, container, false)
+        val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
         initializeRvListContainer(view)
         subscribeData()
         subscribeCommands()
