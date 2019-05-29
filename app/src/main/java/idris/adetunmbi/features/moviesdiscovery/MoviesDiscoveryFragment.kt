@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import idris.adetunmbi.features.moviedetail.MovieDetailFragment
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.api.Resource
 import idris.adetunmbi.domain.extenstions.plusAssign
@@ -22,7 +24,10 @@ class MoviesDiscoveryFragment : Fragment() {
     private val moviesListAdapter: MoviesListAdapter by lazy {
         MoviesListAdapter(
             mutableListOf()
-        )
+        ) { movieId ->
+            findNavController()
+                .navigate(R.id.action_moviesDiscoveryFragment_to_movieFragment, MovieDetailFragment.args(movieId))
+        }
     }
     private val snackBar: Snackbar? by lazy {
         this.view?.let {

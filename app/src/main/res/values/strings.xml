@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="movie_poster">movie poster image</string>
+
+    <string name="text_overview">Overview:</string>
+    <string name="text_rating_icon">Rating Icon</string>
 </resources>
