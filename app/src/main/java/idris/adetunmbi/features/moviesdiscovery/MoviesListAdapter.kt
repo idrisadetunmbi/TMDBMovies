@@ -31,6 +31,11 @@ class MoviesListAdapter(private var movies: MutableList<Movie>) : RecyclerView.A
         notifyDataSetChanged()
     }
 
+    fun clearData() {
+        movies.clear()
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val overviewTextView by lazy {
             itemView.findViewById<TextView>(R.id.textview_movie_overview)
