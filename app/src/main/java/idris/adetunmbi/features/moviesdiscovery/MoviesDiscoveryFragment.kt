@@ -2,13 +2,14 @@ package idris.adetunmbi.features.moviesdiscovery
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import idris.adetunmbi.features.moviedetail.MovieDetailFragment
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.api.Resource
 import idris.adetunmbi.domain.extenstions.plusAssign
@@ -23,12 +24,20 @@ class MoviesDiscoveryFragment : Fragment() {
     private val moviesListAdapter: MoviesListAdapter by lazy {
         MoviesListAdapter(
             mutableListOf()
-        )
+        ) { movieId ->
+            findNavController()
+                .navigate(R.id.action_moviesDiscoveryFragment_to_movieFragment, MovieDetailFragment.args(movieId))
+        }
     }
     private val snackBar: Snackbar? by lazy {
         this.view?.let {
             Snackbar.make(it, "", Snackbar.LENGTH_SHORT)
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -40,6 +49,25 @@ class MoviesDiscoveryFragment : Fragment() {
         subscribeData()
         subscribeCommands()
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu, menu)
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                handleSearchSubmit(query)
+                searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { handleSearchChange(it) }
+                return true
+            }
+        })
     }
 
     fun handleSearchSubmit(text: String?) {

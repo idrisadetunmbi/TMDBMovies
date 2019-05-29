@@ -11,7 +11,8 @@ import idris.adetunmbi.R
 import idris.adetunmbi.domain.BASE_IMAGE_URL
 
 
-class MoviesListAdapter(private var movies: MutableList<Movie>) : RecyclerView.Adapter<MoviesListAdapter.ViewHolder>() {
+class MoviesListAdapter(private var movies: MutableList<Movie>, val onClickMovie: (movieId: Int) -> Unit)
+    : RecyclerView.Adapter<MoviesListAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_movie, parent, false)
@@ -34,7 +35,7 @@ class MoviesListAdapter(private var movies: MutableList<Movie>) : RecyclerView.A
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val overviewTextView by lazy {
             itemView.findViewById<TextView>(R.id.textview_movie_overview)
         }
@@ -42,7 +43,11 @@ class MoviesListAdapter(private var movies: MutableList<Movie>) : RecyclerView.A
             itemView.findViewById<ImageView>(R.id.imageview_movie_poster)
         }
         private val titleTextView by lazy {
-            itemView.findViewById<TextView>(R.id.textview_movie_title)
+            itemView.findViewById<TextView>(R.id.tv_movie_title)
+        }
+
+        init {
+            itemView.setOnClickListener(this)
         }
 
         fun bind(movie: Movie) {
@@ -53,6 +58,11 @@ class MoviesListAdapter(private var movies: MutableList<Movie>) : RecyclerView.A
                 .fit()
                 .centerCrop()
                 .into(imagePosterImageView)
+        }
+
+        override fun onClick(v: View?) {
+            val movie = movies[adapterPosition]
+            onClickMovie(movie.id)
         }
     }
 }
