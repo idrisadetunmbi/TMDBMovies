@@ -33,7 +33,8 @@ class MovieDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        val sourceIsFavList = arguments?.getBoolean(ARG_SOURCE_IS_FAV_LIST)
+        sourceIsFavList?.let { setHasOptionsMenu(!it) }
     }
 
     override fun onCreateView(
@@ -111,8 +112,9 @@ class MovieDetailFragment : Fragment() {
 
     companion object {
         private const val ARG_MOVIE_ID = "ARG_MOVIE_ID"
-        fun args(argMovieId: Int): Bundle {
-            return bundleOf(ARG_MOVIE_ID to argMovieId)
+        private const val ARG_SOURCE_IS_FAV_LIST = "ARG_SOURCE_IS_FAV_LIST"
+        fun args(argMovieId: Int, argSourceIsFavList: Boolean = false): Bundle {
+            return bundleOf(ARG_MOVIE_ID to argMovieId, ARG_SOURCE_IS_FAV_LIST to argSourceIsFavList)
         }
     }
 }

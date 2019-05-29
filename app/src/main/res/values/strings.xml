@@ -5,4 +5,5 @@
     <string name="text_overview">Overview:</string>
     <string name="text_rating_icon">Rating Icon</string>
     <string name="action_favorite">Favorite</string>
+    <string name="favorites">Favorites</string>
 </resources>

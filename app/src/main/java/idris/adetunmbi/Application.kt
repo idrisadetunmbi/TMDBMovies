@@ -2,9 +2,10 @@ package idris.adetunmbi
 
 import android.app.Application
 import idris.adetunmbi.domain.api.Api
-import idris.adetunmbi.features.moviesdiscovery.MoviesDiscoveryViewModel
 import idris.adetunmbi.domain.api.WebServiceGenerator
+import idris.adetunmbi.features.favoritemovies.FavoriteMoviesViewModel
 import idris.adetunmbi.features.moviedetail.MovieDetailViewModel
+import idris.adetunmbi.features.moviesdiscovery.MoviesDiscoveryViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.android.viewmodel.dsl.viewModel
@@ -21,6 +22,7 @@ class Application : Application() {
                 single { WebServiceGenerator(applicationContext).createService<Api>() }
                 viewModel { MoviesDiscoveryViewModel(get()) }
                 viewModel { MovieDetailViewModel(get()) }
+                viewModel { FavoriteMoviesViewModel(get()) }
             })
         }
     }

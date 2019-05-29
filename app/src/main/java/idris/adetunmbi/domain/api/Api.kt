@@ -20,4 +20,7 @@ interface Api {
 
     @POST("account/{}/favorite")
     fun favoriteMovie(@Body body: FavoriteMovieRequestBody): Completable
+
+    @GET("account/{}/favorite/movies")
+    fun getFavoriteMovies(): Single<MoviesListResponse>
 }
