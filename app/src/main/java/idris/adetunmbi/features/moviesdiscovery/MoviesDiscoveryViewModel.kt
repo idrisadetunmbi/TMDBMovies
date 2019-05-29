@@ -50,6 +50,7 @@ class MoviesDiscoveryViewModel(private val api: Api) : ViewModel() {
     fun handleSearchChange(newText: String) {
         if (::searchQuery.isInitialized && searchQuery.isNotEmpty() && newText.isEmpty()) {
             searchIsActive = false
+            currentSearchPage = 0
             _commandSubject.onNext(ViewCommands.ClearData)
             _dataSubject.onNext(Resource.Success(discoveryList))
         }
