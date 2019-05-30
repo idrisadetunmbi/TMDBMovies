@@ -33,7 +33,7 @@ Clone Project in Android Studio and sync Gradle files
 
 ## Deployment
 
-The app is not currently deployed to any app store. Deploying should be done based on the docs for the Android guides
+The app is not currently deployed to any app store. Deploying can be done based on the docs from the Android guides
 
 ## Built With
 
@@ -42,7 +42,7 @@ The app is not currently deployed to any app store. Deploying should be done bas
 
 ## Contributing
 
-The project can be open for contribution. Please feel free raise a PR to suggest improvements.
+The project is open for contributions. Please feel free raise a PR to suggest improvements.
 
 ## License
 
