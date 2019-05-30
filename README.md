@@ -31,6 +31,17 @@ Clone Project in Android Studio and sync Gradle files
 # Run the app from Android Studio afterwards on an emulator or a connected device
 ```
 
+## Running the tests
+
+Tests have been included for a few components. Tests can be executed from Android Studio or by using the gradle command below
+```
+./gradlew test
+```
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
 ## Deployment
 
 The app is not currently deployed to any app store. Deploying can be done based on the docs from the Android guides
