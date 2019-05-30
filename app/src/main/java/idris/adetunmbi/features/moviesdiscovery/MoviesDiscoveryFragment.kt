@@ -40,6 +40,8 @@ class MoviesDiscoveryFragment : BaseFragment() {
         initializeRvListContainer(view)
         subscribeData()
         subscribeCommands()
+
+        viewModel.init()
         return view
     }
 

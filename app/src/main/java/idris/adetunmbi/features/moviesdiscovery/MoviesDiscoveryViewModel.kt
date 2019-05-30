@@ -22,7 +22,7 @@ class MoviesDiscoveryViewModel(private val api: Api) : BaseViewModel<Resource<Li
     val commandSubject: Observable<ViewCommands>
         get() = _commandSubject.hide()
 
-    init {
+    fun init() {
         fetchData()
     }
 
