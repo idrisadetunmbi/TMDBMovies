@@ -4,22 +4,19 @@ package idris.adetunmbi.features.moviesdiscovery
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import idris.adetunmbi.features.moviedetail.MovieDetailFragment
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.api.Resource
+import idris.adetunmbi.domain.core.BaseFragment
 import idris.adetunmbi.domain.extenstions.plusAssign
+import idris.adetunmbi.features.moviedetail.MovieDetailFragment
 import idris.adetunmbi.features.moviesdiscovery.MoviesDiscoveryViewModel.ViewCommands.ClearData
-import io.reactivex.disposables.CompositeDisposable
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MoviesDiscoveryFragment : Fragment() {
+class MoviesDiscoveryFragment : BaseFragment() {
     private val viewModel: MoviesDiscoveryViewModel by viewModel()
-    private val compositeDisposable = CompositeDisposable()
 
     private val moviesListAdapter: MoviesListAdapter by lazy {
         MoviesListAdapter(
@@ -27,11 +24,6 @@ class MoviesDiscoveryFragment : Fragment() {
         ) { movieId ->
             findNavController()
                 .navigate(R.id.action_global_movieFragment, MovieDetailFragment.args(movieId))
-        }
-    }
-    private val snackBar: Snackbar? by lazy {
-        this.view?.let {
-            Snackbar.make(it, "", Snackbar.LENGTH_SHORT)
         }
     }
 

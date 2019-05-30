@@ -11,24 +11,17 @@ import com.squareup.picasso.Picasso
 import idris.adetunmbi.R
 import idris.adetunmbi.domain.BASE_IMAGE_URL
 import idris.adetunmbi.domain.api.Resource
+import idris.adetunmbi.domain.core.BaseFragment
 import idris.adetunmbi.domain.extenstions.plusAssign
 import idris.adetunmbi.features.moviedetail.MovieDetailViewModel.ViewCommands.ShowNotification
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class MovieDetailFragment : Fragment() {
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+class MovieDetailFragment : BaseFragment() {
+
     private val viewModel: MovieDetailViewModel by viewModel()
-
     private var movieId: Int = 0
-
-    private val snackBar: Snackbar? by lazy {
-        this.view?.let {
-            Snackbar.make(it, "", Snackbar.LENGTH_SHORT)
-        }
-    }
-
     private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {

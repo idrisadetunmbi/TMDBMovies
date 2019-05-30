@@ -10,15 +10,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import idris.adetunmbi.R
+import idris.adetunmbi.domain.core.BaseFragment
 import idris.adetunmbi.domain.extenstions.plusAssign
 import idris.adetunmbi.features.moviedetail.MovieDetailFragment
 import idris.adetunmbi.features.moviesdiscovery.MoviesListAdapter
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class FavoritesFragment : Fragment() {
+class FavoritesFragment : BaseFragment() {
 
-    private val compositeDisposable = CompositeDisposable()
     private val viewModel: FavoriteMoviesViewModel by viewModel()
     private val moviesListAdapter: MoviesListAdapter =
         MoviesListAdapter(
@@ -50,6 +50,4 @@ class FavoritesFragment : Fragment() {
             moviesListAdapter.updateData(it.results)
         }
     }
-
-
 }

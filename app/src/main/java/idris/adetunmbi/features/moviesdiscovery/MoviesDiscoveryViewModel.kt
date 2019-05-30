@@ -1,18 +1,15 @@
 package idris.adetunmbi.features.moviesdiscovery
 
-import androidx.lifecycle.ViewModel
 import idris.adetunmbi.domain.api.Api
 import idris.adetunmbi.domain.api.Resource
+import idris.adetunmbi.domain.core.BaseViewModel
 import idris.adetunmbi.domain.extenstions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-class MoviesDiscoveryViewModel(private val api: Api) : ViewModel() {
-    private val _dataSubject: PublishSubject<Resource<List<Movie>>> = PublishSubject.create()
+class MoviesDiscoveryViewModel(private val api: Api) : BaseViewModel<Resource<List<Movie>>>() {
     private val _commandSubject: PublishSubject<ViewCommands> = PublishSubject.create()
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private var currentPage = 0
     private var currentSearchPage = 0
@@ -21,9 +18,6 @@ class MoviesDiscoveryViewModel(private val api: Api) : ViewModel() {
     private lateinit var searchQuery: String
 
     private val discoveryList = mutableListOf<Movie>()
-
-    val dataSubject: Observable<Resource<List<Movie>>>
-        get() = _dataSubject.hide()
 
     val commandSubject: Observable<ViewCommands>
         get() = _commandSubject.hide()
@@ -88,11 +82,6 @@ class MoviesDiscoveryViewModel(private val api: Api) : ViewModel() {
                 }, {
                     _dataSubject.onNext(Resource.Error("An error occurred"))
                 })
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
     }
 
     sealed class ViewCommands {

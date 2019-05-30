@@ -1,21 +1,15 @@
 package idris.adetunmbi.features.moviedetail
 
-import androidx.lifecycle.ViewModel
 import idris.adetunmbi.domain.api.Api
 import idris.adetunmbi.domain.api.Resource
+import idris.adetunmbi.domain.core.BaseViewModel
 import idris.adetunmbi.domain.extenstions.plusAssign
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-class MovieDetailViewModel(private val api: Api) : ViewModel() {
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private val _dataSubject = PublishSubject.create<Resource<MovieResponse>>()
+class MovieDetailViewModel(private val api: Api) : BaseViewModel<Resource<MovieResponse>>() {
     private val _commandSubject = PublishSubject.create<ViewCommands>()
-
-    val dataSubject: Observable<Resource<MovieResponse>>
-        get() = _dataSubject.hide()
 
     val commandSubject: Observable<ViewCommands>
         get() = _commandSubject.hide()
